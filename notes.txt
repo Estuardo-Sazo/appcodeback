@@ -1,0 +1,2 @@
+leventar copilardor de typescript
+tsc -w
