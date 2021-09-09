@@ -8,11 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const autentucacion_1 = require("../middlewares/autentucacion");
 const post_model_1 = require("../models/post.model");
+const file_system_1 = __importDefault(require("../classes/file-system"));
 const postRoutes = (0, express_1.Router)();
+const fileSystem = new file_system_1.default();
 //OBTENER POST
 postRoutes.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let pagina = Number(req.query.pagina) || 1;
@@ -46,6 +51,33 @@ postRoutes.post('/', [autentucacion_1.verificaToken], (req, res) => {
             ok: false,
             err
         });
+    });
+});
+// Servicio de subida de archivos
+postRoutes.post('/upload', [autentucacion_1.verificaToken], (req, res) => {
+    if (!req.files) {
+        return res.status(400).json({
+            ok: false,
+            mensaje: "No subió ningun archivo"
+        });
+    }
+    const file = req.files.image;
+    if (!file) {
+        return res.status(400).json({
+            ok: false,
+            mensaje: "No subió ningun archivo- imagen"
+        });
+    }
+    if (!file.mimetype.includes('image')) {
+        return res.status(400).json({
+            ok: false,
+            mensaje: "No subió una imagen"
+        });
+    }
+    fileSystem.guardarImageTemp(file, req.usuario._id);
+    res.status(200).json({
+        ok: true,
+        file: file.mimetype
     });
 });
 exports.default = postRoutes;
