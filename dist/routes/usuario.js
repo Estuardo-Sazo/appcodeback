@@ -8,7 +8,7 @@ const usuario_model_1 = require("../models/usuario.model");
 const bcrypt = require("bcrypt");
 const token_1 = __importDefault(require("../classes/token"));
 const autentucacion_1 = require("../middlewares/autentucacion");
-const userRoutes = express_1.Router();
+const userRoutes = (0, express_1.Router)();
 //LOGIN USUARIO
 userRoutes.post('/login', (req, res) => {
     const body = req.body;
@@ -71,7 +71,7 @@ userRoutes.post('/update', autentucacion_1.verificaToken, (req, res) => {
         email: req.body.email || req.usuario.email,
         avatar: req.body.avatar || req.usuario.avatar,
     };
-    usuario_model_1.Usuario.findByIdAndUpdate(req.usuario_id, user, { new: true }, (err, userDB) => {
+    usuario_model_1.Usuario.findOneAndUpdate(req.usuario_id, user, { new: true }, (err, userDB) => {
         if (err)
             throw err;
         if (!userDB) {
