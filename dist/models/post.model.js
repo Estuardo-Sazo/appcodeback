@@ -9,7 +9,7 @@ const postSchema = new mongoose_1.Schema({
     mensaje: {
         type: String
     },
-    img: [{
+    imgs: [{
             type: String
         }],
     coords: {
@@ -25,4 +25,4 @@ postSchema.pre('save', function (next) {
     this.created = new Date();
     next();
 });
-exports.Post = (0, mongoose_1.model)('Post', postSchema);
+exports.Post = mongoose_1.model('Post', postSchema);

@@ -16,7 +16,7 @@ const express_1 = require("express");
 const autentucacion_1 = require("../middlewares/autentucacion");
 const post_model_1 = require("../models/post.model");
 const file_system_1 = __importDefault(require("../classes/file-system"));
-const postRoutes = (0, express_1.Router)();
+const postRoutes = express_1.Router();
 const fileSystem = new file_system_1.default();
 //OBTENER POST
 postRoutes.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,6 +39,8 @@ postRoutes.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 postRoutes.post('/', [autentucacion_1.verificaToken], (req, res) => {
     const body = req.body;
     body.usuario = req.usuario._id;
+    const imagenes = fileSystem.imagenesTempPosts(req.usuario._id);
+    body.imgs = imagenes;
     post_model_1.Post.create(body).then((postDB) => __awaiter(void 0, void 0, void 0, function* () {
         yield postDB.populate('usuario', '-password').execPopulate();
         postRoutes;
@@ -54,7 +56,7 @@ postRoutes.post('/', [autentucacion_1.verificaToken], (req, res) => {
     });
 });
 // Servicio de subida de archivos
-postRoutes.post('/upload', [autentucacion_1.verificaToken], (req, res) => {
+postRoutes.post('/upload', [autentucacion_1.verificaToken], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.files) {
         return res.status(400).json({
             ok: false,
@@ -74,10 +76,17 @@ postRoutes.post('/upload', [autentucacion_1.verificaToken], (req, res) => {
             mensaje: "No subió una imagen"
         });
     }
-    fileSystem.guardarImageTemp(file, req.usuario._id);
+    yield fileSystem.guardarImageTemp(file, req.usuario._id);
     res.status(200).json({
         ok: true,
         file: file.mimetype
     });
+}));
+//mostrarimages
+postRoutes.get('/imagen/:userId/:img', (req, res) => {
+    const userId = req.params.userId;
+    const img = req.params.img;
+    const pathImg = fileSystem.getFotoUrl(userId, img);
+    res.sendFile(pathImg);
 });
 exports.default = postRoutes;

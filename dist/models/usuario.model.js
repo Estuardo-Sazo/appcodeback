@@ -30,4 +30,4 @@ usuarioSchema.method('compararPassword', function (password = '') {
         return false;
     }
 });
-exports.Usuario = (0, mongoose_1.model)('Usuario', usuarioSchema);
+exports.Usuario = mongoose_1.model('Usuario', usuarioSchema);

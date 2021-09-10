@@ -14,7 +14,7 @@ const server = new server_1.default();
 server.app.use(body_parser_1.default.urlencoded({ extended: true }));
 server.app.use(body_parser_1.default.json());
 //FILEUPLOAD FR
-server.app.use((0, express_fileupload_1.default)());
+server.app.use(express_fileupload_1.default());
 /// IMPORTAR RUTAS DE APP
 server.app.use('/user', usuario_1.default);
 server.app.use('/posts', post_1.default);
