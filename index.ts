@@ -29,10 +29,10 @@ server.app.use('/posts', postRoutes);
 
 //CONECTAR DB
 mongoose.connect('mongodb://localhost:27017/appcode', {
-
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useCreateIndex: true,
+    useFindAndModify: false,
 }, (err) => {
     if (err) throw err;
     console.log('Base de datos online!');

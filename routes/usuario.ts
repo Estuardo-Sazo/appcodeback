@@ -76,7 +76,7 @@ userRoutes.post('/update', verificaToken, (req: any, res: Response) => {
         email: req.body.email || req.usuario.email,
         avatar: req.body.avatar || req.usuario.avatar,
     };
-    Usuario.findOneAndUpdate(req.usuario_id, user, { new: true }, (err, userDB) => {
+    Usuario.findByIdAndUpdate(req.usuario._id, user,{ new: true, runValidators: true}, (err, userDB) => {
         if (err) throw err;
         if (!userDB) {
             res.json({
